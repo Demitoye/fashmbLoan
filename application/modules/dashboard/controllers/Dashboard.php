@@ -17,6 +17,21 @@ function index(){
    $query_row = $query->row_array();
    $data['user']= $query_row['first_name'];
    $data['status']= $query_row['account_status'];
+   $email= $query_row['email'];
+   $paid = $query_row['paid'];
+
+
+   if($paid == "No"){
+
+   $query2 = $this->db->query("SELECT * FROM payment WHERE email = '$email'");
+   $query_row2 = $query2->row_array();
+   $referral_num_generate = $query_row2['reference'];
+   $email = $query_row2['email'];
+   $amount = $query_row2['amount'];
+     redirect('payment.php?ref='.$referral_num_generate);
+   }else{
+
+
 
    $query2 = $this->db->query("SELECT * FROM `loan_requests` WHERE user_id = '$user_id' ORDER by id DESC LIMIT 1");
    $query_row2 = $query2->row_array();
@@ -25,6 +40,7 @@ function index(){
    $data['loan_status']= $query_row2['status'];
    $data['date']= $query_row2['date'];
    $data['return_date']= $query_row2['return_date'];
+}
 
   $this->load->view('dashboard', $data);
 }
@@ -46,6 +62,23 @@ function account(){
 
 
   $this->load->view('accounts', $data);
+
+}
+
+function payment_sucessful(){
+
+   $user_id = $this->site_security->_get_user_id();
+   $documents['paid'] = "Yes";
+
+
+
+    $this->db->where('id', $user_id);
+    $this->db->update('users', $documents);
+    
+
+   
+          
+   redirect('dashboard');
 
 }
 
