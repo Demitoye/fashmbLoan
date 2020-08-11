@@ -70,7 +70,7 @@ function index(){
                   $this->db->insert('payment', $insert_data);
 
 
-                  redirect('payment.php?ref='.$referral_num_generate);
+                  redirect('login');
 
 
         }
